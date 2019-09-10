@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -8,7 +8,7 @@ const PointStyles = styled.div`
     left:${props => props.x - props.radius / 2}px;
     top:${props => props.y - props.radius / 2}px;
     border-radius:50%;
-    background:white;
+    background:grey;
     position:absolute;
 `;
 

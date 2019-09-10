@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
+import DimensionLabel from './DimensionLabel';
 const LineStyles = styled.div`
   border: 0.5px solid black;
   width: ${props => props.length}px;
@@ -17,14 +17,28 @@ const LineStyles = styled.div`
   left: ${props => props.x}px;
 `;
 const DimensionLine = props => {
-  const { x1, y1, length, alpha, flip } = props;
+  const { x1, y1, length, alpha, flip, offset, text } = props;
   let { dashedLength } = props;
   if (flip) {
     dashedLength = -1 * dashedLength;
   }
   const x = x1 + dashedLength * Math.sin(alpha);
   const y = y1 - dashedLength * Math.cos(alpha);
-  return <LineStyles x={x} y={y} length={length} angle={alpha}></LineStyles>;
+  return (
+    <>
+      <LineStyles x={x} y={y} length={length} angle={alpha}></LineStyles>
+      <DimensionLabel
+        x1={x1}
+        y1={y1}
+        length={length}
+        alpha={alpha}
+        dashedLength={dashedLength}
+        offset={offset}
+        flip={flip}
+        text={text}
+      ></DimensionLabel>
+    </>
+  );
 };
 
 DimensionLine.propTypes = {

@@ -1,27 +1,31 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Line from './Line';
 import DashedLine from './DashedLine';
 import DimensionLine from './DimensionLine';
 import Point from './Point';
 
 const ContainerStyles = styled.div`
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  width: 1000px;
+  height: 1000px;
   &:hover {
     cursor: pointer;
   }
+  background-image: url('https://mcnairshirts.com/wp-content/uploads/2019/03/mcnair-mens-plasmadry-olive-force-shirt-1500sq.jpg');
+  background-size: contain;
 `;
 
 class Container extends Component {
   handleClick = e => {
     const pointsSet = [...this.state.pointsSet];
+    e.persist();
+    console.log(e);
+
     if (!pointsSet[0]) {
       pointsSet[0] = true;
       pointsSet[1] = false;
-      const x1 = e.clientX;
-      const y1 = e.clientY;
+      const x1 = e.pageX;
+      const y1 = e.pageY;
       this.setState({ pointsSet, x1, y1 });
     } else if (pointsSet[0] && pointsSet[1]) {
       pointsSet[0] = false;
@@ -33,14 +37,22 @@ class Container extends Component {
       this.setState({ pointsSet, x1, y1, x2, y2 });
     } else if (pointsSet[0] && !pointsSet[1]) {
       pointsSet[1] = true;
-      const x2 = e.clientX;
-      const y2 = e.clientY;
+      const x2 = e.pageX;
+      const y2 = e.pageY;
       this.setState({ pointsSet, x2, y2 });
     }
   };
-  handleChange = ({ currentTarget: { value, name } }) => {
-    const val = parseFloat(value);
-    this.setState({ [name]: Math.abs(val), flip: val < 0 });
+  handleChange = ({ currentTarget: { value, name, type } }) => {
+    let val = value;
+    let flip = false;
+    if (type === 'number') {
+      val = parseFloat(val) || 0;
+    }
+    if (name === 'dashedLength') {
+      flip = val < 0;
+      val = Math.abs(val);
+    }
+    this.setState({ [name]: val, flip });
   };
 
   calculateAlpha = (x1, x2, y1, y2) => {
@@ -80,10 +92,20 @@ class Container extends Component {
     pointRadius: 15,
     pointsSet: [false, false],
     dashedLength: 100,
-    flip: false
+    flip: false,
+    offset: 23
   };
   render() {
-    const { x1, y1, x2, y2, pointRadius, dashedLength, flip } = this.state;
+    const {
+      x1,
+      y1,
+      x2,
+      y2,
+      pointRadius,
+      dashedLength,
+      flip,
+      offset
+    } = this.state;
     const pointsSet = [...this.state.pointsSet];
     const alpha = this.calculateAlpha(x1, x2, y1, y2);
     const length = this.calculateLength(x1, x2, y1, y2);
@@ -97,6 +119,14 @@ class Container extends Component {
             onChange={this.handleChange}
             defaultValue={this.state.dashedLength}
             name="dashedLength"
+            type="number"
+          ></input>
+          <label>Text Offset</label>
+          <input
+            onClick={e => e.stopPropagation()}
+            onChange={this.handleChange}
+            defaultValue={this.state.offset}
+            name="offset"
             type="number"
           ></input>
         </form>
@@ -125,6 +155,8 @@ class Container extends Component {
               dashedLength={dashedLength}
               alpha={alpha}
               flip={flip}
+              offset={offset}
+              text={'10px'}
             ></DimensionLine>
           </>
         )}
@@ -132,7 +164,5 @@ class Container extends Component {
     );
   }
 }
-
-Container.propTypes = {};
 
 export default Container;

@@ -1,13 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Line from './components/Line';
+
+import Container from './components/Container';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Line x1={2} x2={180} y1={360} y2={520}></Line>
-      </header>
+      <Container></Container>
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const LineStyles = styled.div`
-  border: 1px solid black;
+  border: 0.5px solid black;
   width: ${props => props.length}px;
   height: 0px;
   transform: rotate(${props => props.angle}rad);
@@ -16,16 +16,24 @@ const LineStyles = styled.div`
   top: ${props => props.y}px;
   left: ${props => props.x}px;
 `;
-const Line = props => {
-  const { x, y, length, alpha } = props;
+const DimensionLine = props => {
+  const { x1, y1, length, alpha, flip } = props;
+  let { dashedLength } = props;
+  if (flip) {
+    dashedLength = -1 * dashedLength;
+  }
+  const x = x1 + dashedLength * Math.sin(alpha);
+  const y = y1 - dashedLength * Math.cos(alpha);
   return <LineStyles x={x} y={y} length={length} angle={alpha}></LineStyles>;
 };
 
-Line.propTypes = {
-  x: PropTypes.number,
-  y: PropTypes.number,
+DimensionLine.propTypes = {
+  x1: PropTypes.number,
+  y1: PropTypes.number,
   length: PropTypes.number,
-  alpha: PropTypes.number
+  dashedLength: PropTypes.number,
+  alpha: PropTypes.number,
+  flip: PropTypes.bool
 };
 
-export default Line;
+export default DimensionLine;
